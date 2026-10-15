@@ -1,0 +1,741 @@
+{
+  "__meta__": {
+    "generator": "vsm.datasets.load_synthetic",
+    "seed": 0,
+    "n": 120,
+    "image_size": [
+      640,
+      360
+    ],
+    "classes": [
+      "construction_zone",
+      "emergency_vehicle",
+      "occluded_pedestrian",
+      "road_change",
+      "nominal"
+    ],
+    "note": "Generator truth. Not used by the real VLM path; used by label_tool --bootstrap-from-hidden and by the mock backend."
+  },
+  "frames": {
+    "syn-00000": {
+      "true_class": "construction_zone",
+      "scene_id": "scene-0000",
+      "image_path": "data/synthetic/syn-00000.png",
+      "is_near_duplicate": false
+    },
+    "syn-00001": {
+      "true_class": "emergency_vehicle",
+      "scene_id": "scene-0000",
+      "image_path": "data/synthetic/syn-00001.png",
+      "is_near_duplicate": false
+    },
+    "syn-00002": {
+      "true_class": "occluded_pedestrian",
+      "scene_id": "scene-0000",
+      "image_path": "data/synthetic/syn-00002.png",
+      "is_near_duplicate": false
+    },
+    "syn-00003": {
+      "true_class": "occluded_pedestrian",
+      "scene_id": "scene-0000",
+      "image_path": "data/synthetic/syn-00003.png",
+      "is_near_duplicate": true
+    },
+    "syn-00004": {
+      "true_class": "occluded_pedestrian",
+      "scene_id": "scene-0000",
+      "image_path": "data/synthetic/syn-00004.png",
+      "is_near_duplicate": true
+    },
+    "syn-00005": {
+      "true_class": "construction_zone",
+      "scene_id": "scene-0000",
+      "image_path": "data/synthetic/syn-00005.png",
+      "is_near_duplicate": false
+    },
+    "syn-00006": {
+      "true_class": "emergency_vehicle",
+      "scene_id": "scene-0001",
+      "image_path": "data/synthetic/syn-00006.png",
+      "is_near_duplicate": false
+    },
+    "syn-00007": {
+      "true_class": "occluded_pedestrian",
+      "scene_id": "scene-0001",
+      "image_path": "data/synthetic/syn-00007.png",
+      "is_near_duplicate": false
+    },
+    "syn-00008": {
+      "true_class": "road_change",
+      "scene_id": "scene-0001",
+      "image_path": "data/synthetic/syn-00008.png",
+      "is_near_duplicate": false
+    },
+    "syn-00009": {
+      "true_class": "nominal",
+      "scene_id": "scene-0001",
+      "image_path": "data/synthetic/syn-00009.png",
+      "is_near_duplicate": false
+    },
+    "syn-00010": {
+      "true_class": "construction_zone",
+      "scene_id": "scene-0001",
+      "image_path": "data/synthetic/syn-00010.png",
+      "is_near_duplicate": false
+    },
+    "syn-00011": {
+      "true_class": "emergency_vehicle",
+      "scene_id": "scene-0001",
+      "image_path": "data/synthetic/syn-00011.png",
+      "is_near_duplicate": false
+    },
+    "syn-00012": {
+      "true_class": "emergency_vehicle",
+      "scene_id": "scene-0002",
+      "image_path": "data/synthetic/syn-00012.png",
+      "is_near_duplicate": true
+    },
+    "syn-00013": {
+      "true_class": "road_change",
+      "scene_id": "scene-0002",
+      "image_path": "data/synthetic/syn-00013.png",
+      "is_near_duplicate": false
+    },
+    "syn-00014": {
+      "true_class": "road_change",
+      "scene_id": "scene-0002",
+      "image_path": "data/synthetic/syn-00014.png",
+      "is_near_duplicate": true
+    },
+    "syn-00015": {
+      "true_class": "construction_zone",
+      "scene_id": "scene-0002",
+      "image_path": "data/synthetic/syn-00015.png",
+      "is_near_duplicate": false
+    },
+    "syn-00016": {
+      "true_class": "emergency_vehicle",
+      "scene_id": "scene-0002",
+      "image_path": "data/synthetic/syn-00016.png",
+      "is_near_duplicate": false
+    },
+    "syn-00017": {
+      "true_class": "occluded_pedestrian",
+      "scene_id": "scene-0002",
+      "image_path": "data/synthetic/syn-00017.png",
+      "is_near_duplicate": false
+    },
+    "syn-00018": {
+      "true_class": "road_change",
+      "scene_id": "scene-0003",
+      "image_path": "data/synthetic/syn-00018.png",
+      "is_near_duplicate": false
+    },
+    "syn-00019": {
+      "true_class": "nominal",
+      "scene_id": "scene-0003",
+      "image_path": "data/synthetic/syn-00019.png",
+      "is_near_duplicate": false
+    },
+    "syn-00020": {
+      "true_class": "construction_zone",
+      "scene_id": "scene-0003",
+      "image_path": "data/synthetic/syn-00020.png",
+      "is_near_duplicate": false
+    },
+    "syn-00021": {
+      "true_class": "construction_zone",
+      "scene_id": "scene-0003",
+      "image_path": "data/synthetic/syn-00021.png",
+      "is_near_duplicate": true
+    },
+    "syn-00022": {
+      "true_class": "construction_zone",
+      "scene_id": "scene-0003",
+      "image_path": "data/synthetic/syn-00022.png",
+      "is_near_duplicate": true
+    },
+    "syn-00023": {
+      "true_class": "road_change",
+      "scene_id": "scene-0003",
+      "image_path": "data/synthetic/syn-00023.png",
+      "is_near_duplicate": false
+    },
+    "syn-00024": {
+      "true_class": "nominal",
+      "scene_id": "scene-0004",
+      "image_path": "data/synthetic/syn-00024.png",
+      "is_near_duplicate": false
+    },
+    "syn-00025": {
+      "true_class": "construction_zone",
+      "scene_id": "scene-0004",
+      "image_path": "data/synthetic/syn-00025.png",
+      "is_near_duplicate": false
+    },
+    "syn-00026": {
+      "true_class": "emergency_vehicle",
+      "scene_id": "scene-0004",
+      "image_path": "data/synthetic/syn-00026.png",
+      "is_near_duplicate": false
+    },
+    "syn-00027": {
+      "true_class": "occluded_pedestrian",
+      "scene_id": "scene-0004",
+      "image_path": "data/synthetic/syn-00027.png",
+      "is_near_duplicate": false
+    },
+    "syn-00028": {
+      "true_class": "road_change",
+      "scene_id": "scene-0004",
+      "image_path": "data/synthetic/syn-00028.png",
+      "is_near_duplicate": false
+    },
+    "syn-00029": {
+      "true_class": "nominal",
+      "scene_id": "scene-0004",
+      "image_path": "data/synthetic/syn-00029.png",
+      "is_near_duplicate": false
+    },
+    "syn-00030": {
+      "true_class": "construction_zone",
+      "scene_id": "scene-0005",
+      "image_path": "data/synthetic/syn-00030.png",
+      "is_near_duplicate": false
+    },
+    "syn-00031": {
+      "true_class": "emergency_vehicle",
+      "scene_id": "scene-0005",
+      "image_path": "data/synthetic/syn-00031.png",
+      "is_near_duplicate": false
+    },
+    "syn-00032": {
+      "true_class": "occluded_pedestrian",
+      "scene_id": "scene-0005",
+      "image_path": "data/synthetic/syn-00032.png",
+      "is_near_duplicate": false
+    },
+    "syn-00033": {
+      "true_class": "occluded_pedestrian",
+      "scene_id": "scene-0005",
+      "image_path": "data/synthetic/syn-00033.png",
+      "is_near_duplicate": true
+    },
+    "syn-00034": {
+      "true_class": "nominal",
+      "scene_id": "scene-0005",
+      "image_path": "data/synthetic/syn-00034.png",
+      "is_near_duplicate": false
+    },
+    "syn-00035": {
+      "true_class": "construction_zone",
+      "scene_id": "scene-0005",
+      "image_path": "data/synthetic/syn-00035.png",
+      "is_near_duplicate": false
+    },
+    "syn-00036": {
+      "true_class": "emergency_vehicle",
+      "scene_id": "scene-0006",
+      "image_path": "data/synthetic/syn-00036.png",
+      "is_near_duplicate": false
+    },
+    "syn-00037": {
+      "true_class": "occluded_pedestrian",
+      "scene_id": "scene-0006",
+      "image_path": "data/synthetic/syn-00037.png",
+      "is_near_duplicate": false
+    },
+    "syn-00038": {
+      "true_class": "road_change",
+      "scene_id": "scene-0006",
+      "image_path": "data/synthetic/syn-00038.png",
+      "is_near_duplicate": false
+    },
+    "syn-00039": {
+      "true_class": "nominal",
+      "scene_id": "scene-0006",
+      "image_path": "data/synthetic/syn-00039.png",
+      "is_near_duplicate": false
+    },
+    "syn-00040": {
+      "true_class": "construction_zone",
+      "scene_id": "scene-0006",
+      "image_path": "data/synthetic/syn-00040.png",
+      "is_near_duplicate": false
+    },
+    "syn-00041": {
+      "true_class": "emergency_vehicle",
+      "scene_id": "scene-0006",
+      "image_path": "data/synthetic/syn-00041.png",
+      "is_near_duplicate": false
+    },
+    "syn-00042": {
+      "true_class": "occluded_pedestrian",
+      "scene_id": "scene-0007",
+      "image_path": "data/synthetic/syn-00042.png",
+      "is_near_duplicate": false
+    },
+    "syn-00043": {
+      "true_class": "road_change",
+      "scene_id": "scene-0007",
+      "image_path": "data/synthetic/syn-00043.png",
+      "is_near_duplicate": false
+    },
+    "syn-00044": {
+      "true_class": "nominal",
+      "scene_id": "scene-0007",
+      "image_path": "data/synthetic/syn-00044.png",
+      "is_near_duplicate": false
+    },
+    "syn-00045": {
+      "true_class": "construction_zone",
+      "scene_id": "scene-0007",
+      "image_path": "data/synthetic/syn-00045.png",
+      "is_near_duplicate": false
+    },
+    "syn-00046": {
+      "true_class": "emergency_vehicle",
+      "scene_id": "scene-0007",
+      "image_path": "data/synthetic/syn-00046.png",
+      "is_near_duplicate": false
+    },
+    "syn-00047": {
+      "true_class": "occluded_pedestrian",
+      "scene_id": "scene-0007",
+      "image_path": "data/synthetic/syn-00047.png",
+      "is_near_duplicate": false
+    },
+    "syn-00048": {
+      "true_class": "road_change",
+      "scene_id": "scene-0008",
+      "image_path": "data/synthetic/syn-00048.png",
+      "is_near_duplicate": false
+    },
+    "syn-00049": {
+      "true_class": "road_change",
+      "scene_id": "scene-0008",
+      "image_path": "data/synthetic/syn-00049.png",
+      "is_near_duplicate": true
+    },
+    "syn-00050": {
+      "true_class": "construction_zone",
+      "scene_id": "scene-0008",
+      "image_path": "data/synthetic/syn-00050.png",
+      "is_near_duplicate": false
+    },
+    "syn-00051": {
+      "true_class": "emergency_vehicle",
+      "scene_id": "scene-0008",
+      "image_path": "data/synthetic/syn-00051.png",
+      "is_near_duplicate": false
+    },
+    "syn-00052": {
+      "true_class": "occluded_pedestrian",
+      "scene_id": "scene-0008",
+      "image_path": "data/synthetic/syn-00052.png",
+      "is_near_duplicate": false
+    },
+    "syn-00053": {
+      "true_class": "road_change",
+      "scene_id": "scene-0008",
+      "image_path": "data/synthetic/syn-00053.png",
+      "is_near_duplicate": false
+    },
+    "syn-00054": {
+      "true_class": "road_change",
+      "scene_id": "scene-0009",
+      "image_path": "data/synthetic/syn-00054.png",
+      "is_near_duplicate": true
+    },
+    "syn-00055": {
+      "true_class": "construction_zone",
+      "scene_id": "scene-0009",
+      "image_path": "data/synthetic/syn-00055.png",
+      "is_near_duplicate": false
+    },
+    "syn-00056": {
+      "true_class": "emergency_vehicle",
+      "scene_id": "scene-0009",
+      "image_path": "data/synthetic/syn-00056.png",
+      "is_near_duplicate": false
+    },
+    "syn-00057": {
+      "true_class": "occluded_pedestrian",
+      "scene_id": "scene-0009",
+      "image_path": "data/synthetic/syn-00057.png",
+      "is_near_duplicate": false
+    },
+    "syn-00058": {
+      "true_class": "road_change",
+      "scene_id": "scene-0009",
+      "image_path": "data/synthetic/syn-00058.png",
+      "is_near_duplicate": false
+    },
+    "syn-00059": {
+      "true_class": "nominal",
+      "scene_id": "scene-0009",
+      "image_path": "data/synthetic/syn-00059.png",
+      "is_near_duplicate": false
+    },
+    "syn-00060": {
+      "true_class": "nominal",
+      "scene_id": "scene-0010",
+      "image_path": "data/synthetic/syn-00060.png",
+      "is_near_duplicate": true
+    },
+    "syn-00061": {
+      "true_class": "emergency_vehicle",
+      "scene_id": "scene-0010",
+      "image_path": "data/synthetic/syn-00061.png",
+      "is_near_duplicate": false
+    },
+    "syn-00062": {
+      "true_class": "occluded_pedestrian",
+      "scene_id": "scene-0010",
+      "image_path": "data/synthetic/syn-00062.png",
+      "is_near_duplicate": false
+    },
+    "syn-00063": {
+      "true_class": "occluded_pedestrian",
+      "scene_id": "scene-0010",
+      "image_path": "data/synthetic/syn-00063.png",
+      "is_near_duplicate": true
+    },
+    "syn-00064": {
+      "true_class": "nominal",
+      "scene_id": "scene-0010",
+      "image_path": "data/synthetic/syn-00064.png",
+      "is_near_duplicate": false
+    },
+    "syn-00065": {
+      "true_class": "construction_zone",
+      "scene_id": "scene-0010",
+      "image_path": "data/synthetic/syn-00065.png",
+      "is_near_duplicate": false
+    },
+    "syn-00066": {
+      "true_class": "emergency_vehicle",
+      "scene_id": "scene-0011",
+      "image_path": "data/synthetic/syn-00066.png",
+      "is_near_duplicate": false
+    },
+    "syn-00067": {
+      "true_class": "occluded_pedestrian",
+      "scene_id": "scene-0011",
+      "image_path": "data/synthetic/syn-00067.png",
+      "is_near_duplicate": false
+    },
+    "syn-00068": {
+      "true_class": "road_change",
+      "scene_id": "scene-0011",
+      "image_path": "data/synthetic/syn-00068.png",
+      "is_near_duplicate": false
+    },
+    "syn-00069": {
+      "true_class": "nominal",
+      "scene_id": "scene-0011",
+      "image_path": "data/synthetic/syn-00069.png",
+      "is_near_duplicate": false
+    },
+    "syn-00070": {
+      "true_class": "nominal",
+      "scene_id": "scene-0011",
+      "image_path": "data/synthetic/syn-00070.png",
+      "is_near_duplicate": true
+    },
+    "syn-00071": {
+      "true_class": "emergency_vehicle",
+      "scene_id": "scene-0011",
+      "image_path": "data/synthetic/syn-00071.png",
+      "is_near_duplicate": false
+    },
+    "syn-00072": {
+      "true_class": "occluded_pedestrian",
+      "scene_id": "scene-0012",
+      "image_path": "data/synthetic/syn-00072.png",
+      "is_near_duplicate": false
+    },
+    "syn-00073": {
+      "true_class": "road_change",
+      "scene_id": "scene-0012",
+      "image_path": "data/synthetic/syn-00073.png",
+      "is_near_duplicate": false
+    },
+    "syn-00074": {
+      "true_class": "nominal",
+      "scene_id": "scene-0012",
+      "image_path": "data/synthetic/syn-00074.png",
+      "is_near_duplicate": false
+    },
+    "syn-00075": {
+      "true_class": "construction_zone",
+      "scene_id": "scene-0012",
+      "image_path": "data/synthetic/syn-00075.png",
+      "is_near_duplicate": false
+    },
+    "syn-00076": {
+      "true_class": "emergency_vehicle",
+      "scene_id": "scene-0012",
+      "image_path": "data/synthetic/syn-00076.png",
+      "is_near_duplicate": false
+    },
+    "syn-00077": {
+      "true_class": "occluded_pedestrian",
+      "scene_id": "scene-0012",
+      "image_path": "data/synthetic/syn-00077.png",
+      "is_near_duplicate": false
+    },
+    "syn-00078": {
+      "true_class": "road_change",
+      "scene_id": "scene-0013",
+      "image_path": "data/synthetic/syn-00078.png",
+      "is_near_duplicate": false
+    },
+    "syn-00079": {
+      "true_class": "nominal",
+      "scene_id": "scene-0013",
+      "image_path": "data/synthetic/syn-00079.png",
+      "is_near_duplicate": false
+    },
+    "syn-00080": {
+      "true_class": "construction_zone",
+      "scene_id": "scene-0013",
+      "image_path": "data/synthetic/syn-00080.png",
+      "is_near_duplicate": false
+    },
+    "syn-00081": {
+      "true_class": "emergency_vehicle",
+      "scene_id": "scene-0013",
+      "image_path": "data/synthetic/syn-00081.png",
+      "is_near_duplicate": false
+    },
+    "syn-00082": {
+      "true_class": "occluded_pedestrian",
+      "scene_id": "scene-0013",
+      "image_path": "data/synthetic/syn-00082.png",
+      "is_near_duplicate": false
+    },
+    "syn-00083": {
+      "true_class": "road_change",
+      "scene_id": "scene-0013",
+      "image_path": "data/synthetic/syn-00083.png",
+      "is_near_duplicate": false
+    },
+    "syn-00084": {
+      "true_class": "nominal",
+      "scene_id": "scene-0014",
+      "image_path": "data/synthetic/syn-00084.png",
+      "is_near_duplicate": false
+    },
+    "syn-00085": {
+      "true_class": "construction_zone",
+      "scene_id": "scene-0014",
+      "image_path": "data/synthetic/syn-00085.png",
+      "is_near_duplicate": false
+    },
+    "syn-00086": {
+      "true_class": "emergency_vehicle",
+      "scene_id": "scene-0014",
+      "image_path": "data/synthetic/syn-00086.png",
+      "is_near_duplicate": false
+    },
+    "syn-00087": {
+      "true_class": "occluded_pedestrian",
+      "scene_id": "scene-0014",
+      "image_path": "data/synthetic/syn-00087.png",
+      "is_near_duplicate": false
+    },
+    "syn-00088": {
+      "true_class": "road_change",
+      "scene_id": "scene-0014",
+      "image_path": "data/synthetic/syn-00088.png",
+      "is_near_duplicate": false
+    },
+    "syn-00089": {
+      "true_class": "road_change",
+      "scene_id": "scene-0014",
+      "image_path": "data/synthetic/syn-00089.png",
+      "is_near_duplicate": true
+    },
+    "syn-00090": {
+      "true_class": "construction_zone",
+      "scene_id": "scene-0015",
+      "image_path": "data/synthetic/syn-00090.png",
+      "is_near_duplicate": false
+    },
+    "syn-00091": {
+      "true_class": "emergency_vehicle",
+      "scene_id": "scene-0015",
+      "image_path": "data/synthetic/syn-00091.png",
+      "is_near_duplicate": false
+    },
+    "syn-00092": {
+      "true_class": "occluded_pedestrian",
+      "scene_id": "scene-0015",
+      "image_path": "data/synthetic/syn-00092.png",
+      "is_near_duplicate": false
+    },
+    "syn-00093": {
+      "true_class": "occluded_pedestrian",
+      "scene_id": "scene-0015",
+      "image_path": "data/synthetic/syn-00093.png",
+      "is_near_duplicate": true
+    },
+    "syn-00094": {
+      "true_class": "nominal",
+      "scene_id": "scene-0015",
+      "image_path": "data/synthetic/syn-00094.png",
+      "is_near_duplicate": false
+    },
+    "syn-00095": {
+      "true_class": "construction_zone",
+      "scene_id": "scene-0015",
+      "image_path": "data/synthetic/syn-00095.png",
+      "is_near_duplicate": false
+    },
+    "syn-00096": {
+      "true_class": "emergency_vehicle",
+      "scene_id": "scene-0016",
+      "image_path": "data/synthetic/syn-00096.png",
+      "is_near_duplicate": false
+    },
+    "syn-00097": {
+      "true_class": "emergency_vehicle",
+      "scene_id": "scene-0016",
+      "image_path": "data/synthetic/syn-00097.png",
+      "is_near_duplicate": true
+    },
+    "syn-00098": {
+      "true_class": "road_change",
+      "scene_id": "scene-0016",
+      "image_path": "data/synthetic/syn-00098.png",
+      "is_near_duplicate": false
+    },
+    "syn-00099": {
+      "true_class": "nominal",
+      "scene_id": "scene-0016",
+      "image_path": "data/synthetic/syn-00099.png",
+      "is_near_duplicate": false
+    },
+    "syn-00100": {
+      "true_class": "construction_zone",
+      "scene_id": "scene-0016",
+      "image_path": "data/synthetic/syn-00100.png",
+      "is_near_duplicate": false
+    },
+    "syn-00101": {
+      "true_class": "emergency_vehicle",
+      "scene_id": "scene-0016",
+      "image_path": "data/synthetic/syn-00101.png",
+      "is_near_duplicate": false
+    },
+    "syn-00102": {
+      "true_class": "occluded_pedestrian",
+      "scene_id": "scene-0017",
+      "image_path": "data/synthetic/syn-00102.png",
+      "is_near_duplicate": false
+    },
+    "syn-00103": {
+      "true_class": "road_change",
+      "scene_id": "scene-0017",
+      "image_path": "data/synthetic/syn-00103.png",
+      "is_near_duplicate": false
+    },
+    "syn-00104": {
+      "true_class": "nominal",
+      "scene_id": "scene-0017",
+      "image_path": "data/synthetic/syn-00104.png",
+      "is_near_duplicate": false
+    },
+    "syn-00105": {
+      "true_class": "construction_zone",
+      "scene_id": "scene-0017",
+      "image_path": "data/synthetic/syn-00105.png",
+      "is_near_duplicate": false
+    },
+    "syn-00106": {
+      "true_class": "emergency_vehicle",
+      "scene_id": "scene-0017",
+      "image_path": "data/synthetic/syn-00106.png",
+      "is_near_duplicate": false
+    },
+    "syn-00107": {
+      "true_class": "occluded_pedestrian",
+      "scene_id": "scene-0017",
+      "image_path": "data/synthetic/syn-00107.png",
+      "is_near_duplicate": false
+    },
+    "syn-00108": {
+      "true_class": "road_change",
+      "scene_id": "scene-0018",
+      "image_path": "data/synthetic/syn-00108.png",
+      "is_near_duplicate": false
+    },
+    "syn-00109": {
+      "true_class": "road_change",
+      "scene_id": "scene-0018",
+      "image_path": "data/synthetic/syn-00109.png",
+      "is_near_duplicate": true
+    },
+    "syn-00110": {
+      "true_class": "construction_zone",
+      "scene_id": "scene-0018",
+      "image_path": "data/synthetic/syn-00110.png",
+      "is_near_duplicate": false
+    },
+    "syn-00111": {
+      "true_class": "emergency_vehicle",
+      "scene_id": "scene-0018",
+      "image_path": "data/synthetic/syn-00111.png",
+      "is_near_duplicate": false
+    },
+    "syn-00112": {
+      "true_class": "emergency_vehicle",
+      "scene_id": "scene-0018",
+      "image_path": "data/synthetic/syn-00112.png",
+      "is_near_duplicate": true
+    },
+    "syn-00113": {
+      "true_class": "road_change",
+      "scene_id": "scene-0018",
+      "image_path": "data/synthetic/syn-00113.png",
+      "is_near_duplicate": false
+    },
+    "syn-00114": {
+      "true_class": "road_change",
+      "scene_id": "scene-0019",
+      "image_path": "data/synthetic/syn-00114.png",
+      "is_near_duplicate": true
+    },
+    "syn-00115": {
+      "true_class": "construction_zone",
+      "scene_id": "scene-0019",
+      "image_path": "data/synthetic/syn-00115.png",
+      "is_near_duplicate": false
+    },
+    "syn-00116": {
+      "true_class": "emergency_vehicle",
+      "scene_id": "scene-0019",
+      "image_path": "data/synthetic/syn-00116.png",
+      "is_near_duplicate": false
+    },
+    "syn-00117": {
+      "true_class": "occluded_pedestrian",
+      "scene_id": "scene-0019",
+      "image_path": "data/synthetic/syn-00117.png",
+      "is_near_duplicate": false
+    },
+    "syn-00118": {
+      "true_class": "occluded_pedestrian",
+      "scene_id": "scene-0019",
+      "image_path": "data/synthetic/syn-00118.png",
+      "is_near_duplicate": true
+    },
+    "syn-00119": {
+      "true_class": "nominal",
+      "scene_id": "scene-0019",
+      "image_path": "data/synthetic/syn-00119.png",
+      "is_near_duplicate": false
+    }
+  }
+}

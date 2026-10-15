@@ -1,0 +1,19 @@
+# Pinned for Python 3.11 (CPU-only; no API key required to run the pipeline).
+# Versions match the reference environment used to produce the results in README.md.
+openai==3.31.0
+torch==2.14.0
+torchvision==0.29.1
+opencv-python==5.0.0.93
+Pillow==12.3.0
+numpy==2.4.6
+pandas==3.0.6
+pyarrow==25.0.1
+duckdb==1.5.6
+PyYAML==6.0.3
+matplotlib==3.11.2
+pydantic==2.12.5
+tqdm==4.70.1
+# dev / test / lint
+pytest==9.1.1
+pytest-cov==7.1.0
+ruff==0.16.10
