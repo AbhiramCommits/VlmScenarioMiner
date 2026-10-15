@@ -24,9 +24,9 @@ Ground truth: `data/ground_truth.jsonl` (120 frames, produced by `bootstrap-from
 
 | version | schema-failure rate | retries recovered | tokens | est. cost (USD) | p50 latency (ms) | p95 latency (ms) |
 |---|---|---|---|---|---|---|
-| v1 | 0.1980 | 20 | 130554 | 0.021969 | 360.6 | 670.0 |
-| v2 | 0.1188 | 12 | 236629 | 0.037784 | 449.7 | 823.0 |
-| v3 | 0.0099 | 1 | 247860 | 0.039372 | 520.8 | 621.5 |
+| v1 | 0.1980 | 20 | 130554 | 0.021969 | 371.8 | 696.0 |
+| v2 | 0.1188 | 12 | 236629 | 0.037784 | 453.6 | 832.2 |
+| v3 | 0.0099 | 1 | 247860 | 0.039372 | 529.2 | 629.3 |
 
 ## Confusion matrix (best version: v3)
 

@@ -56,13 +56,15 @@ class Usage:
 
 
 def rates_for(model: str) -> tuple[float, float]:
-    """Rates for a model id, with a case/dash-insensitive fallback to defaults."""
+    """Rates for a model id, with a case-insensitive longest-prefix fallback."""
     key = model.strip().lower()
     if key in PRICING_PER_1K:
         return PRICING_PER_1K[key]
-    for known, rates in PRICING_PER_1K.items():
-        if key.startswith(known):
-            return rates
+    # Longest matching prefix wins, so "gpt-4o-mini-2024-07-18" resolves to
+    # gpt-4o-mini rather than gpt-4o.
+    matches = [known for known in PRICING_PER_1K if key.startswith(known)]
+    if matches:
+        return PRICING_PER_1K[max(matches, key=len)]
     return DEFAULT_RATES_PER_1K
 
 
@@ -73,7 +75,9 @@ def is_known_model(model: str) -> bool:
 def estimate_cost(usage: Usage, model: str) -> float:
     """Estimated USD cost of a :class:`Usage` at ``model`` rates."""
     input_rate, output_rate = rates_for(model)
-    return (usage.prompt_tokens / 1000.0) * input_rate + (usage.completion_tokens / 1000.0) * output_rate
+    return (usage.prompt_tokens / 1000.0) * input_rate + (
+        usage.completion_tokens / 1000.0
+    ) * output_rate
 
 
 def cost_breakdown(usage: Usage, model: str) -> dict[str, object]:

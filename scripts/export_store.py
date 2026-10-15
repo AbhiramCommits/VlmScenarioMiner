@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 """Build the Parquet scenario manifest from a run.
 
-    python scripts/export_store.py --run v3
-    python scripts/export_store.py --run v3 --threshold 0.6
+python scripts/export_store.py --run v3
+python scripts/export_store.py --run v3 --threshold 0.6
 """
 
 from __future__ import annotations
@@ -20,10 +20,16 @@ from vsm.store import open_db, scenario_counts, write_manifest  # noqa: E402
 
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
     parser.add_argument("--run", default="v3", help="prompt version whose predictions to export")
-    parser.add_argument("--threshold", type=float, default=None, help="confidence floor (default: run threshold)")
-    parser.add_argument("--out", type=Path, default=None, help="manifest directory (default: out/store/scenarios)")
+    parser.add_argument(
+        "--threshold", type=float, default=None, help="confidence floor (default: run threshold)"
+    )
+    parser.add_argument(
+        "--out", type=Path, default=None, help="manifest directory (default: out/store/scenarios)"
+    )
     return parser.parse_args(argv)
 
 
@@ -34,7 +40,10 @@ def main(argv: list[str] | None = None) -> int:
     pred_path = run_dir / "predictions.jsonl"
     meta_path = run_dir / "run_meta.json"
     if not pred_path.exists():
-        print(f"ERROR: missing {pred_path}; run scripts/run_inference.py --prompt-version {args.run}", file=sys.stderr)
+        print(
+            f"ERROR: missing {pred_path}; run scripts/run_inference.py --prompt-version {args.run}",
+            file=sys.stderr,
+        )
         return 1
 
     predictions = load_predictions(pred_path)
@@ -53,7 +62,7 @@ def main(argv: list[str] | None = None) -> int:
     print()
     print(scenario_counts(open_db(settings=settings)).to_string(index=False))
     print()
-    print(json.dumps({"manifest_meta": str(Path(summary.path).parent / 'manifest_meta.json')}))
+    print(json.dumps({"manifest_meta": str(Path(summary.path).parent / "manifest_meta.json")}))
     return 0
 
 

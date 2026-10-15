@@ -124,7 +124,13 @@ def _draw_cone(img: np.ndarray, base_x: int, base_y: int, scale: float) -> None:
     left = (base_x - half, base_y)
     right = (base_x + half, base_y)
     cv2.fillPoly(img, [np.array([apex, left, right], dtype=np.int32)], COLOR_ORANGE)
-    cv2.rectangle(img, (base_x - half, base_y - int(tall * 0.28)), (base_x + half, base_y - int(tall * 0.12)), COLOR_WHITE, -1)
+    cv2.rectangle(
+        img,
+        (base_x - half, base_y - int(tall * 0.28)),
+        (base_x + half, base_y - int(tall * 0.12)),
+        COLOR_WHITE,
+        -1,
+    )
     cv2.rectangle(img, (base_x - half - 2, base_y), (base_x + half + 2, base_y + 3), COLOR_DARK, -1)
 
 
@@ -141,7 +147,9 @@ def _draw_barrier(img: np.ndarray, x0: int, y0: int, x1: int, y1: int) -> None:
     cv2.rectangle(img, (x0, y0), (x1, y1), COLOR_DARK, 2)
 
 
-def _draw_vehicle_body(img: np.ndarray, x0: int, y0: int, x1: int, y1: int, color: tuple[int, int, int]) -> None:
+def _draw_vehicle_body(
+    img: np.ndarray, x0: int, y0: int, x1: int, y1: int, color: tuple[int, int, int]
+) -> None:
     cv2.rectangle(img, (x0, y1 - 10), (x1, y1), COLOR_DARK, -1)
     cv2.rectangle(img, (x0, y0), (x1, y1), color, -1)
     # Windscreen.
@@ -404,7 +412,9 @@ def load_hidden_truth(out_dir: Path | None = None) -> dict[str, str]:
 # --------------------------------------------------------------------------------------
 
 
-def load_nuscenes_mini(root: Path, max_frames: int | None = None, camera: str = "CAM_FRONT") -> list[Frame]:
+def load_nuscenes_mini(
+    root: Path, max_frames: int | None = None, camera: str = "CAM_FRONT"
+) -> list[Frame]:
     """Load front-camera keyframes from a nuScenes mini tree.
 
     Requires ``nuscenes-devkit`` and a ``v1.0-mini`` split under ``root`` (i.e.
@@ -439,7 +449,11 @@ def load_nuscenes_mini(root: Path, max_frames: int | None = None, camera: str = 
                 true_class=None,
                 width=int(data["width"]),
                 height=int(data["height"]),
-                metadata={"nuscenes": True, "sample_token": str(sample["token"]), "ego_translation": list(ego_pose["translation"])},
+                metadata={
+                    "nuscenes": True,
+                    "sample_token": str(sample["token"]),
+                    "ego_translation": list(ego_pose["translation"]),
+                },
             )
         )
         if max_frames is not None and len(frames) >= max_frames:

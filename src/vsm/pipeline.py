@@ -101,7 +101,9 @@ def encode_frame(frame: Frame) -> tuple[str, bytes, tuple[int, int, int, int]]:
     return base64.b64encode(raw).decode("ascii"), raw, box
 
 
-def build_backend(settings: Settings, prompt_version: str, truth: dict[str, str] | None = None) -> VLMBackend:
+def build_backend(
+    settings: Settings, prompt_version: str, truth: dict[str, str] | None = None
+) -> VLMBackend:
     """Select the backend from settings."""
     if settings.vlm_backend == "openai":
         return OpenAIVLM(
@@ -112,7 +114,9 @@ def build_backend(settings: Settings, prompt_version: str, truth: dict[str, str]
             max_retries=settings.max_retries,
         )
     if settings.vlm_backend != "mock":
-        raise ValueError(f"unknown VLM_BACKEND={settings.vlm_backend!r}; expected 'mock' or 'openai'")
+        raise ValueError(
+            f"unknown VLM_BACKEND={settings.vlm_backend!r}; expected 'mock' or 'openai'"
+        )
     if truth is None:
         truth = load_hidden_truth(settings.synthetic_dir)
     return MockVLM(
@@ -174,7 +178,10 @@ def run_batch(
     dedup_seconds = time.perf_counter() - wall_start
     logger.info(
         "dedup: %d/%d frames kept (%d near-duplicates skipped, threshold %.4f)",
-        dedup_report.n_kept, dedup_report.n_total, dedup_report.n_duplicates, dedup_report.threshold,
+        dedup_report.n_kept,
+        dedup_report.n_total,
+        dedup_report.n_duplicates,
+        dedup_report.threshold,
     )
 
     prompt_tokens = 0
@@ -206,8 +213,8 @@ def run_batch(
                 detection = None
                 error = str(exc)
             text = entry.text
-            schema_retries = 0
-            first_attempt_valid = True
+            schema_retries = entry.schema_retries
+            first_attempt_valid = entry.first_attempt_valid
             call_latency = 0.0
         else:
             from_cache = False
@@ -233,6 +240,8 @@ def run_batch(
                         model=backend.model,
                         backend=backend.name,
                         prompt_version=prompt_version,
+                        first_attempt_valid=first_attempt_valid,
+                        schema_retries=schema_retries,
                     ),
                 )
 
@@ -358,7 +367,10 @@ def run_batch(
         )
         logger.info(
             "wrote %s (%d records) and %s: wall=%.2fs",
-            predictions_path, n_processed, meta_name, wall_clock,
+            predictions_path,
+            n_processed,
+            meta_name,
+            wall_clock,
         )
     return report
 

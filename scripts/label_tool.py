@@ -37,9 +37,13 @@ from vsm.taxonomy import HAZARD_CLASSES  # noqa: E402
 
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
     parser.add_argument("--out", type=Path, default=Path("data/ground_truth.jsonl"))
-    parser.add_argument("--n", type=int, default=None, help="number of frames (defaults to MAX_FRAMES)")
+    parser.add_argument(
+        "--n", type=int, default=None, help="number of frames (defaults to MAX_FRAMES)"
+    )
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument(
         "--noise-rate",
@@ -56,7 +60,9 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     return parser.parse_args(argv)
 
 
-def interactive_label(frames: list, out_path: Path, labeler: str) -> None:  # pragma: no cover - interactive
+def interactive_label(
+    frames: list, out_path: Path, labeler: str
+) -> None:  # pragma: no cover - interactive
     """Walk the frames and ask a human for the classes in each one."""
     labels: dict[str, list[str]] = {}
     notes: dict[str, str] = {}
@@ -76,8 +82,13 @@ def interactive_label(frames: list, out_path: Path, labeler: str) -> None:  # pr
             classes = [c for c in classes if c in HAZARD_CLASSES]
         labels[frame.frame_id] = classes
     meta = make_meta(
-        mode="interactive", n_frames=len(labels), noise_rate=0.0, seed=0,
-        labeler=labeler, source="human", path=out_path,
+        mode="interactive",
+        n_frames=len(labels),
+        noise_rate=0.0,
+        seed=0,
+        labeler=labeler,
+        source="human",
+        path=out_path,
     )
     write_ground_truth(out_path, labels, meta, notes)
     print(f"\nwrote {len(labels)} labels to {out_path}")
@@ -129,8 +140,10 @@ def main(argv: list[str] | None = None) -> int:
     print(f"wrote {len(labels)} labels to {args.out}")
     print("  mode           : bootstrap-from-hidden")
     print(f"  source         : {meta['source']}")
-    print(f"  noise rate     : {args.noise_rate:.0%} (seed {args.seed}), events applied: {len(events)} "
-          f"({len(events) / max(1, len(labels)):.2%})")
+    print(
+        f"  noise rate     : {args.noise_rate:.0%} (seed {args.seed}), events applied: {len(events)} "
+        f"({len(events) / max(1, len(labels)):.2%})"
+    )
     print(f"  frames by class: {stats['per_class_frame_counts']}")
     print(f"  labels/frame   : {stats['labels_per_frame']}")
     for event in events[:12]:

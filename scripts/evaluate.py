@@ -30,7 +30,9 @@ from vsm.taxonomy import HAZARD_CLASSES  # noqa: E402
 
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
     parser.add_argument("--runs", default="v1,v2,v3", help="comma-separated prompt versions")
     parser.add_argument("--gt", type=Path, default=Path("data/ground_truth.jsonl"))
     parser.add_argument("--threshold", type=float, default=0.5)
@@ -47,25 +49,33 @@ def write_markdown(metrics: dict, out_path: Path, gt_meta: dict) -> str:
     lines: list[str] = []
     lines.append("# Scenario mining metrics\n")
     lines.append(f"Confidence threshold: **{metrics['threshold']}**  ")
-    lines.append(f"Ground truth: `{metrics['gt_path']}` ({metrics['n_gt_frames']} frames, "
-                 f"produced by `{gt_meta.get('mode', 'unknown')}` with "
-                 f"{gt_meta.get('adjudication_noise_rate', 0.0):.0%} adjudication noise)\n")
+    lines.append(
+        f"Ground truth: `{metrics['gt_path']}` ({metrics['n_gt_frames']} frames, "
+        f"produced by `{gt_meta.get('mode', 'unknown')}` with "
+        f"{gt_meta.get('adjudication_noise_rate', 0.0):.0%} adjudication noise)\n"
+    )
 
     lines.append("## Per-class metrics (all versions)\n")
-    header = "| class | " + " | ".join(f"{v} P / R / F1" for v in metrics["versions"]) + " | support |"
+    header = (
+        "| class | " + " | ".join(f"{v} P / R / F1" for v in metrics["versions"]) + " | support |"
+    )
     lines.append(header)
     lines.append("|" + "---|" * (len(metrics["versions"]) + 2))
     for name in HAZARD_CLASSES:
         cells = []
         for version in metrics["versions"]:
             per_class = metrics["runs"][version]["per_class"][name]
-            cells.append(f"{_fmt(per_class['precision'])} / {_fmt(per_class['recall'])} / {_fmt(per_class['f1'])}")
+            cells.append(
+                f"{_fmt(per_class['precision'])} / {_fmt(per_class['recall'])} / {_fmt(per_class['f1'])}"
+            )
         support = metrics["runs"][metrics["versions"][0]]["per_class"][name]["support"]
         lines.append(f"| {name} | " + " | ".join(cells) + f" | {support} |")
     lines.append("")
 
     lines.append("## Macro / micro aggregates\n")
-    lines.append("| version | macro P | macro R | macro F1 | micro P | micro R | micro F1 | nominal acc | frames |")
+    lines.append(
+        "| version | macro P | macro R | macro F1 | micro P | micro R | micro F1 | nominal acc | frames |"
+    )
     lines.append("|---|---|---|---|---|---|---|---|---|")
     for version in metrics["versions"]:
         run = metrics["runs"][version]
@@ -78,7 +88,9 @@ def write_markdown(metrics: dict, out_path: Path, gt_meta: dict) -> str:
     lines.append("")
 
     lines.append("## Run cost / reliability\n")
-    lines.append("| version | schema-failure rate | retries recovered | tokens | est. cost (USD) | p50 latency (ms) | p95 latency (ms) |")
+    lines.append(
+        "| version | schema-failure rate | retries recovered | tokens | est. cost (USD) | p50 latency (ms) | p95 latency (ms) |"
+    )
     lines.append("|---|---|---|---|---|---|---|")
     for version in metrics["versions"]:
         meta = metrics["run_meta"].get(version, {})
@@ -89,8 +101,7 @@ def write_markdown(metrics: dict, out_path: Path, gt_meta: dict) -> str:
         )
     lines.append("")
 
-    lines.append("## Confusion matrix (best version: "
-                 f"{metrics['best_version']})\n")
+    lines.append(f"## Confusion matrix (best version: {metrics['best_version']})\n")
     best = metrics["runs"][metrics["best_version"]]
     labels = best["confusion_labels"]
     lines.append("Rows = ground truth, columns = prediction (`none` = no labels emitted).\n")
@@ -155,7 +166,7 @@ def write_pr_curves(metrics: dict, out_path: Path) -> bool:
         ax.set_ylim(-0.02, 1.05)
         ax.grid(alpha=0.3)
         ax.legend(fontsize=7, loc="lower left")
-    for ax in axes.ravel()[len(versions):]:
+    for ax in axes.ravel()[len(versions) :]:
         ax.axis("off")
     fig.tight_layout()
     fig.savefig(out_path, dpi=130)
@@ -172,7 +183,9 @@ def write_experiment_log(metrics: dict, out_path: Path) -> str:
         f"bootstrap CI ({metrics['bootstrap_samples']} resamples, seed {metrics['seed']}) "
         "on the macro-F1 difference versus the previous version.\n"
     )
-    lines.append("| version | change (changelog summary) | macro P | macro R | macro F1 | schema-failure rate | est. cost (USD) | delta macro-F1 vs previous (95% CI) | delta macro-F1 vs v1 (95% CI) |")
+    lines.append(
+        "| version | change (changelog summary) | macro P | macro R | macro F1 | schema-failure rate | est. cost (USD) | delta macro-F1 vs previous (95% CI) | delta macro-F1 vs v1 (95% CI) |"
+    )
     lines.append("|---|---|---|---|---|---|---|---|---|")
     for version in metrics["versions"]:
         run = metrics["runs"][version]
@@ -227,9 +240,20 @@ def write_experiment_log(metrics: dict, out_path: Path) -> str:
             headline += "."
         lines.append(headline + "\n")
     lines.append("## Threshold sweep (macro-F1 by confidence threshold)\n")
-    header = "| version | " + " | ".join(f"{t:.1f}" for t in metrics["runs"][metrics["versions"][0]]["threshold_sweep"]["thresholds"]) + " |"
+    header = (
+        "| version | "
+        + " | ".join(
+            f"{t:.1f}"
+            for t in metrics["runs"][metrics["versions"][0]]["threshold_sweep"]["thresholds"]
+        )
+        + " |"
+    )
     lines.append(header)
-    lines.append("|" + "---|" * (len(metrics["runs"][metrics["versions"][0]]["threshold_sweep"]["thresholds"]) + 1))
+    lines.append(
+        "|"
+        + "---|"
+        * (len(metrics["runs"][metrics["versions"][0]]["threshold_sweep"]["thresholds"]) + 1)
+    )
     for version in metrics["versions"]:
         sweep = metrics["runs"][version]["threshold_sweep"]["macro"]
         lines.append(f"| {version} | " + " | ".join(_fmt(p["macro_f1"]) for p in sweep) + " |")
@@ -246,10 +270,11 @@ def main(argv: list[str] | None = None) -> int:
 
     from vsm.gt import load_ground_truth
 
-
     ground_truth, gt_meta = load_ground_truth(args.gt)
     if not ground_truth:
-        print(f"ERROR: no ground truth at {args.gt}; run scripts/label_tool.py first", file=sys.stderr)
+        print(
+            f"ERROR: no ground truth at {args.gt}; run scripts/label_tool.py first", file=sys.stderr
+        )
         return 1
 
     versions = [v.strip() for v in args.runs.split(",") if v.strip()]
@@ -262,13 +287,18 @@ def main(argv: list[str] | None = None) -> int:
         run_dir = settings.run_dir(version)
         pred_path = run_dir / "predictions.jsonl"
         if not pred_path.exists():
-            print(f"ERROR: missing {pred_path}; run scripts/run_inference.py --prompt-version {version}", file=sys.stderr)
+            print(
+                f"ERROR: missing {pred_path}; run scripts/run_inference.py --prompt-version {version}",
+                file=sys.stderr,
+            )
             return 1
         predictions = load_predictions(pred_path)
         predictions_by_version[version] = predictions
         runs[version] = evaluate_run(predictions, ground_truth, threshold=args.threshold)
         meta_path = run_dir / "run_meta.json"
-        run_meta[version] = json.loads(meta_path.read_text(encoding="utf-8")) if meta_path.exists() else {}
+        run_meta[version] = (
+            json.loads(meta_path.read_text(encoding="utf-8")) if meta_path.exists() else {}
+        )
         changelogs[version] = load_prompt(version).changelog_summary()
 
     bootstrap: dict[str, dict] = {}
@@ -312,7 +342,9 @@ def main(argv: list[str] | None = None) -> int:
         "changelogs": changelogs,
         "macro_over": list(HAZARD_CLASSES),
     }
-    (settings.eval_dir / "metrics.json").write_text(json.dumps(metrics, indent=2) + "\n", encoding="utf-8")
+    (settings.eval_dir / "metrics.json").write_text(
+        json.dumps(metrics, indent=2) + "\n", encoding="utf-8"
+    )
 
     md = write_markdown(metrics, settings.eval_dir / "metrics.md", gt_meta)
     del md
@@ -325,27 +357,39 @@ def main(argv: list[str] | None = None) -> int:
     plotted = write_pr_curves(metrics, settings.eval_dir / "pr_curves.png")
     write_experiment_log(metrics, settings.eval_dir / "experiment_log.md")
 
-    print(f"evaluated {len(versions)} prompt versions on {len(ground_truth)} GT frames "
-          f"(scored {runs[best_version]['n_frames_scored']} frames with predictions)")
-    print(f"{'version':8s} {'macro-P':>8s} {'macro-R':>8s} {'macro-F1':>9s} {'schema-fail':>12s} {'cost USD':>10s}")
+    print(
+        f"evaluated {len(versions)} prompt versions on {len(ground_truth)} GT frames "
+        f"(scored {runs[best_version]['n_frames_scored']} frames with predictions)"
+    )
+    print(
+        f"{'version':8s} {'macro-P':>8s} {'macro-R':>8s} {'macro-F1':>9s} {'schema-fail':>12s} {'cost USD':>10s}"
+    )
     for version in versions:
         mm = runs[version]["macro_micro"]
         meta = run_meta.get(version, {})
-        print(f"{version:8s} {mm['macro_precision']:8.3f} {mm['macro_recall']:8.3f} {mm['macro_f1']:9.3f} "
-              f"{meta.get('schema_failure_rate', 0.0):12.4f} {meta.get('est_cost_usd', 0.0):10.6f}")
+        print(
+            f"{version:8s} {mm['macro_precision']:8.3f} {mm['macro_recall']:8.3f} {mm['macro_f1']:9.3f} "
+            f"{meta.get('schema_failure_rate', 0.0):12.4f} {meta.get('est_cost_usd', 0.0):10.6f}"
+        )
     for version, ci in bootstrap.items():
         if "error" not in ci:
-            print(f"  {version} vs previous: delta macro-F1 {ci['delta_macro_f1']:+.3f} "
-                  f"[{ci['ci_lower']:+.3f}, {ci['ci_upper']:+.3f}] "
-                  f"P(delta<=0)={ci['prob_delta_le_zero']:.3f} significant={ci['significant']}")
+            print(
+                f"  {version} vs previous: delta macro-F1 {ci['delta_macro_f1']:+.3f} "
+                f"[{ci['ci_lower']:+.3f}, {ci['ci_upper']:+.3f}] "
+                f"P(delta<=0)={ci['prob_delta_le_zero']:.3f} significant={ci['significant']}"
+            )
     for version, ci in bootstrap_vs_first.items():
         if "error" not in ci:
-            print(f"  {version} vs {baseline}: delta macro-F1 {ci['delta_macro_f1']:+.3f} "
-                  f"[{ci['ci_lower']:+.3f}, {ci['ci_upper']:+.3f}] "
-                  f"P(delta<=0)={ci['prob_delta_le_zero']:.3f} significant={ci['significant']}")
+            print(
+                f"  {version} vs {baseline}: delta macro-F1 {ci['delta_macro_f1']:+.3f} "
+                f"[{ci['ci_lower']:+.3f}, {ci['ci_upper']:+.3f}] "
+                f"P(delta<=0)={ci['prob_delta_le_zero']:.3f} significant={ci['significant']}"
+            )
     print(f"best version: {best_version}")
-    print(f"artifacts   : {settings.eval_dir} (metrics.json, metrics.md, experiment_log.md, "
-          f"confusion_*.csv, pr_curves.png={plotted})")
+    print(
+        f"artifacts   : {settings.eval_dir} (metrics.json, metrics.md, experiment_log.md, "
+        f"confusion_*.csv, pr_curves.png={plotted})"
+    )
     return 0
 
 

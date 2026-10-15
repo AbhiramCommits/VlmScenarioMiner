@@ -122,7 +122,9 @@ class ImageEmbedder:
         from torchvision.models import ResNet18_Weights, resnet18
 
         # Keep downloaded weights inside the repo cache so runs are reproducible.
-        os.environ.setdefault("TORCH_HOME", str(Path(os.environ.get("CACHE_DIR", "out/cache")) / "torch"))
+        os.environ.setdefault(
+            "TORCH_HOME", str(Path(os.environ.get("CACHE_DIR", "out/cache")) / "torch")
+        )
         torch.manual_seed(seed)
         self._torch = torch
         self.device = device
@@ -133,7 +135,9 @@ class ImageEmbedder:
                 model = resnet18(weights=weights)
                 self.pretrained_weights = True
             except Exception as exc:  # pragma: no cover - depends on network access
-                logger.warning("could not load pretrained resnet18 weights (%s); using random init", exc)
+                logger.warning(
+                    "could not load pretrained resnet18 weights (%s); using random init", exc
+                )
                 model = resnet18(weights=None)
         else:
             model = resnet18(weights=None)
@@ -158,7 +162,9 @@ class ImageEmbedder:
         resnet_input = []
         luma = []
         for bgr in images:
-            rgb = cv2.cvtColor(cv2.resize(bgr, (224, 224), interpolation=cv2.INTER_AREA), cv2.COLOR_BGR2RGB)
+            rgb = cv2.cvtColor(
+                cv2.resize(bgr, (224, 224), interpolation=cv2.INTER_AREA), cv2.COLOR_BGR2RGB
+            )
             resnet_input.append((rgb.astype(np.float32) / 255.0 - IMAGENET_MEAN) / IMAGENET_STD)
             luma.append(_luma_layout(bgr))
         resnet_feats = _resnet_features(np.stack(resnet_input), self._model)
@@ -173,11 +179,14 @@ class ImageEmbedder:
 
         for i, path in enumerate(paths):
             vector = self._load_cached(path)
+            if self.cache_dir is not None:
+                if vector is None:
+                    self.cache_misses += 1
+                else:
+                    self.cache_hits += 1
             if vector is None:
                 pending.append(i)
-                self.cache_misses += 1
             else:
-                self.cache_hits += 1
                 vectors[i] = vector
 
         for start in range(0, len(pending), batch_size):
@@ -270,7 +279,9 @@ def dedup_frames(
     return [frames[i] for i in kept_idx], report
 
 
-def similarity_stats(frames: list[Frame], embedder: ImageEmbedder | None = None) -> dict[str, float]:
+def similarity_stats(
+    frames: list[Frame], embedder: ImageEmbedder | None = None
+) -> dict[str, float]:
     """Describe all pairwise embedding similarities (used to pick the threshold)."""
     embedder = embedder or ImageEmbedder()
     embeddings = embedder.embed_paths([f.image_path for f in frames])

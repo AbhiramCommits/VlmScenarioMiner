@@ -24,11 +24,15 @@ from vsm.prompts import list_versions  # noqa: E402
 
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
     parser.add_argument("--prompt-version", default="v3", choices=list_versions())
     parser.add_argument("--max-frames", type=int, default=None, help="override MAX_FRAMES")
     parser.add_argument("--workers", type=int, default=None, help="override VLM_CONCURRENCY")
-    parser.add_argument("--n", type=int, default=None, help="frames to generate if synthetic data is used")
+    parser.add_argument(
+        "--n", type=int, default=None, help="frames to generate if synthetic data is used"
+    )
     parser.add_argument("--seed", type=int, default=None)
     parser.add_argument("--no-dedup", action="store_true", help="disable near-duplicate skipping")
     parser.add_argument("--no-cache", action="store_true", help="disable the response cache")
@@ -81,12 +85,20 @@ def main(argv: list[str] | None = None) -> int:
     print(f"frames processed  : {report.n_frames_processed}")
     print(f"duplicates skipped: {report.duplicates_skipped}")
     print(f"backend / model   : {report.backend} / {report.model}")
-    print(f"cache hit rate    : {report.cache_hit_rate:.3f} ({report.cache_hits} hits, {report.cache_misses} misses)")
-    print(f"schema failures   : {report.schema_failures} first-attempt ({report.schema_failure_rate:.4f}), recovered {report.retries_recovered}")
-    print(f"tokens            : {report.total_tokens} (prompt {report.total_prompt_tokens} / completion {report.total_completion_tokens})")
+    print(
+        f"cache hit rate    : {report.cache_hit_rate:.3f} ({report.cache_hits} hits, {report.cache_misses} misses)"
+    )
+    print(
+        f"schema failures   : {report.schema_failures} first-attempt ({report.schema_failure_rate:.4f}), recovered {report.retries_recovered}"
+    )
+    print(
+        f"tokens            : {report.total_tokens} (prompt {report.total_prompt_tokens} / completion {report.total_completion_tokens})"
+    )
     print(f"est. cost         : ${report.est_cost_usd:.6f}")
     print(f"latency p50/p95   : {report.p50_latency_ms:.1f} / {report.p95_latency_ms:.1f} ms")
-    print(f"stage timings     : dedup {report.dedup_s:.2f} s + inference {report.inference_s:.2f} s")
+    print(
+        f"stage timings     : dedup {report.dedup_s:.2f} s + inference {report.inference_s:.2f} s"
+    )
     print(f"inference rate    : {report.inference_fps:.2f} frames/s (inference stage only)")
     print(f"wall clock        : {report.wall_clock_s:.2f} s ({report.throughput_fps:.2f} frames/s)")
     print(f"artifacts         : {report.predictions_path}")

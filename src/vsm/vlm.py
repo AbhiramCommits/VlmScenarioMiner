@@ -136,9 +136,13 @@ def complete_with_validation(
             continue
         if attempt == 0:
             first_valid = True
-        return InferenceOutcome(detection=detection, calls=calls, first_attempt_valid=first_valid, error=None)
+        return InferenceOutcome(
+            detection=detection, calls=calls, first_attempt_valid=first_valid, error=None
+        )
 
-    return InferenceOutcome(detection=None, calls=calls, first_attempt_valid=first_valid, error=error)
+    return InferenceOutcome(
+        detection=None, calls=calls, first_attempt_valid=first_valid, error=error
+    )
 
 
 # --------------------------------------------------------------------------------------
@@ -187,7 +191,10 @@ class OpenAIVLM:
                     {"type": "text", "text": user},
                     {
                         "type": "image_url",
-                        "image_url": {"url": f"data:image/jpeg;base64,{image_b64}", "detail": "high"},
+                        "image_url": {
+                            "url": f"data:image/jpeg;base64,{image_b64}",
+                            "detail": "high",
+                        },
                     },
                 ],
             },
@@ -199,7 +206,8 @@ class OpenAIVLM:
             temperature=self.temperature,
         )
         latency_ms = (time.perf_counter() - started) * 1000.0
-        text = response.choices[0].message.content or ""
+        message = response.choices[0].message
+        text = getattr(message, "content", "") or ""
         usage = getattr(response, "usage", None)
         return VLMResult(
             text=text,
@@ -235,24 +243,50 @@ class MockProfile:
 
 MOCK_PROFILES: dict[str, MockProfile] = {
     "v1": MockProfile(
-        miss=0.32, confusion=0.14, false_fire=0.38, extra_label=0.16,
-        malformed=0.22, confident_share=0.42, base_latency_ms=210.0,
+        miss=0.32,
+        confusion=0.14,
+        false_fire=0.38,
+        extra_label=0.16,
+        malformed=0.22,
+        confident_share=0.42,
+        base_latency_ms=210.0,
     ),
     "v2": MockProfile(
-        miss=0.18, confusion=0.09, false_fire=0.20, extra_label=0.10,
-        malformed=0.10, confident_share=0.68, base_latency_ms=320.0,
+        miss=0.18,
+        confusion=0.09,
+        false_fire=0.20,
+        extra_label=0.10,
+        malformed=0.10,
+        confident_share=0.68,
+        base_latency_ms=320.0,
     ),
     "v3": MockProfile(
-        miss=0.09, confusion=0.05, false_fire=0.09, extra_label=0.06,
-        malformed=0.04, confident_share=0.85, base_latency_ms=430.0,
+        miss=0.09,
+        confusion=0.05,
+        false_fire=0.09,
+        extra_label=0.06,
+        malformed=0.04,
+        confident_share=0.85,
+        base_latency_ms=430.0,
     ),
 }
 DEFAULT_PROFILE = MockProfile(
-    miss=0.20, confusion=0.10, false_fire=0.20, extra_label=0.10,
-    malformed=0.10, confident_share=0.60, base_latency_ms=300.0,
+    miss=0.20,
+    confusion=0.10,
+    false_fire=0.20,
+    extra_label=0.10,
+    malformed=0.10,
+    confident_share=0.60,
+    base_latency_ms=300.0,
 )
 
-_MALFORMED_VARIANTS = ("truncated", "missing_labels", "confidence_out_of_range", "prose_wrapped", "invented_class")
+_MALFORMED_VARIANTS = (
+    "truncated",
+    "missing_labels",
+    "confidence_out_of_range",
+    "prose_wrapped",
+    "invented_class",
+)
 
 
 class MockVLM:
@@ -356,7 +390,9 @@ class MockVLM:
             )
 
         if labels and rng.random() < profile.extra_label:
-            extra_pool = [c for c in HAZARD_CLASSES if c not in {label["class_name"] for label in labels}]
+            extra_pool = [
+                c for c in HAZARD_CLASSES if c not in {label["class_name"] for label in labels}
+            ]
             if extra_pool:
                 extra = rng.choice(extra_pool)
                 labels.append(
@@ -369,7 +405,9 @@ class MockVLM:
         return labels
 
     def _estimate_tokens(self, system: str, user: str, text: str) -> tuple[int, int]:
-        prompt_tokens = int(IMAGE_TOKENS + (len(system) + len(user)) * MODEL_TOKEN_ESTIMATE_PER_CHAR)
+        prompt_tokens = int(
+            IMAGE_TOKENS + (len(system) + len(user)) * MODEL_TOKEN_ESTIMATE_PER_CHAR
+        )
         completion_tokens = max(8, int(len(text) * MODEL_TOKEN_ESTIMATE_PER_CHAR))
         return prompt_tokens, completion_tokens
 

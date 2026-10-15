@@ -92,8 +92,10 @@ def apply_adjudication_noise(
                 for c in SCENARIO_TAXONOMY.get(swapped, {}).get("confusions_with", [])
                 if c in HAZARD_CLASSES
             ]
-            replacement = rng.choice(partners) if partners else rng.choice(
-                [c for c in HAZARD_CLASSES if c != swapped]
+            replacement = (
+                rng.choice(partners)
+                if partners
+                else rng.choice([c for c in HAZARD_CLASSES if c != swapped])
             )
             new_classes = [replacement if c == swapped else c for c in new_classes]
             detail = {"swapped": [swapped, replacement]}

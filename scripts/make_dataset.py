@@ -19,11 +19,15 @@ from vsm.datasets import SCENARIO_CLASSES, load_frames  # noqa: E402
 
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
     parser.add_argument("--n", type=int, default=120, help="number of frames to generate/load")
     parser.add_argument("--seed", type=int, default=0, help="generator seed")
     parser.add_argument("--data-dir", type=Path, default=Path("data"), help="data root")
-    parser.add_argument("--max-frames", type=int, default=None, help="cap frames loaded from nuScenes")
+    parser.add_argument(
+        "--max-frames", type=int, default=None, help="cap frames loaded from nuScenes"
+    )
     return parser.parse_args(argv)
 
 
@@ -75,7 +79,10 @@ def main(argv: list[str] | None = None) -> int:
     print()
 
     if missing:
-        print(f"ERROR: {len(missing)} frames have no image on disk (e.g. {missing[0].image_path})", file=sys.stderr)
+        print(
+            f"ERROR: {len(missing)} frames have no image on disk (e.g. {missing[0].image_path})",
+            file=sys.stderr,
+        )
         return 1
     if bad_size:
         print(f"WARNING: {len(bad_size)} frames failed the size check", file=sys.stderr)

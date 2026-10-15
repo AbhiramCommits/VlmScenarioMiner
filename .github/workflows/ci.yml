@@ -1,0 +1,87 @@
+name: ci
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+  workflow_dispatch:
+
+env:
+  # The whole pipeline runs with zero credentials; CI must never need secrets.
+  VLM_BACKEND: mock
+  PYTHONPATH: src
+  MPLBACKEND: Agg
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+
+jobs:
+  lint-and-test:
+    name: lint + tests (py3.11)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install CPU torch wheels
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install --index-url https://download.pytorch.org/whl/cpu \
+            torch==2.14.0 torchvision==0.29.1
+      - name: Install dependencies
+        run: python -m pip install -r requirements.txt
+      - name: Cache the resnet18 dedup weights
+        uses: actions/cache@v4
+        with:
+          path: out/cache/torch
+          key: torch-weights-resnet18-${{ runner.os }}
+      - name: Warm the dedup weights
+        run: python -c "from torchvision.models import ResNet18_Weights, resnet18; resnet18(weights=ResNet18_Weights.IMAGENET1K_V1)"
+      - name: Lint
+        run: |
+          python -m ruff check src scripts tests
+          python -m ruff format --check src scripts tests
+      - name: Tests with coverage
+        run: python -m pytest --cov=vsm --cov-report=term-missing --cov-report=xml --cov-fail-under=80
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-xml
+          path: coverage.xml
+          if-no-files-found: ignore
+
+  repro:
+    name: make repro (end to end, mock backend)
+    runs-on: ubuntu-latest
+    needs: lint-and-test
+    env:
+      MAX_FRAMES: "40"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install CPU torch wheels
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install --index-url https://download.pytorch.org/whl/cpu \
+            torch==2.14.0 torchvision==0.29.1
+      - name: Install dependencies
+        run: python -m pip install -r requirements.txt
+      - name: Regenerate data, label, run all prompt versions, evaluate, export
+        run: make repro
+      - name: Show headline metrics
+        run: |
+          echo "--- metrics.md ---"
+          cat out/eval/metrics.md
+          echo "--- experiment_log.md ---"
+          cat out/eval/experiment_log.md
+      - name: Upload evaluation artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: eval-artifacts
+          path: out/eval
+          if-no-files-found: error

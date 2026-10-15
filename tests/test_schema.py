@@ -51,7 +51,9 @@ def test_fenced_json_without_language_tag_passes() -> None:
 
 
 def test_empty_labels_is_valid_nominal() -> None:
-    detection = validate_response(json.dumps({"frame_id": "syn-1", "labels": [], "notes": "clear road"}))
+    detection = validate_response(
+        json.dumps({"frame_id": "syn-1", "labels": [], "notes": "clear road"})
+    )
     assert detection.labels == []
     assert detection.best_confidence() == 0.0
 

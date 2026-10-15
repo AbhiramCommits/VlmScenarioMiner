@@ -105,7 +105,52 @@ def test_prompt_and_taxonomy_classes_agree() -> None:
     assert tuple(CLASS_NAMES) == tuple(SCENARIO_CLASSES)
 
 
-def test_changelog_summary_is_first_line() -> None:
-    summary = load_prompt("v3").changelog_summary()
-    assert summary.startswith("v3:")
-    assert len(summary) <= 160
+def test_prompt_dir_errors(tmp_path) -> None:
+    from vsm.prompts import PromptError
+
+    directory = tmp_path / "prompts"
+    directory.mkdir()
+
+    (directory / "v1.yaml").write_text("version: v1\nsystem: s\n", encoding="utf-8")
+    with pytest.raises(PromptError, match="missing required keys"):
+        load_prompt("v1", directory)
+
+    (directory / "v1.yaml").write_text(
+        "version: v9\nsystem: s\nuser_template: u\njson_schema_blurb: b\nchangelog: c\n",
+        encoding="utf-8",
+    )
+    with pytest.raises(PromptError, match="declares version"):
+        load_prompt("v1", directory)
+
+    (directory / "v1.yaml").write_text("- just\n- a\n- list\n", encoding="utf-8")
+    with pytest.raises(PromptError, match="YAML mapping"):
+        load_prompt("v1", directory)
+
+    with pytest.raises(PromptError, match="unknown prompt version"):
+        load_prompt("v5", directory)
+
+
+def test_list_versions_on_custom_dir(tmp_path) -> None:
+    directory = tmp_path / "prompts"
+    directory.mkdir()
+    for version in ("v1", "v2", "v10", "weird"):
+        (directory / f"{version}.yaml").write_text("version: x\n", encoding="utf-8")
+    assert list_versions(directory) == ["v1", "v2", "v10", "weird"]
+
+
+def test_prompt_as_dict_and_changelog_summary() -> None:
+    prompt = load_prompt("v1")
+    payload = prompt.as_dict()
+    assert payload["version"] == "v1"
+    assert payload["path"].endswith("prompts/v1.yaml")
+    assert prompt.changelog_summary(max_chars=20).endswith("\u2026")
+    assert len(prompt.changelog_summary(max_chars=20)) <= 20
+
+
+def test_frame_context_includes_all_template_variables(sample_frame) -> None:
+    from vsm.prompts import frame_context
+
+    context = frame_context(sample_frame)
+    assert context["frame_id"] == sample_frame.frame_id
+    assert context["taxonomy"] and context["schema"]
+    assert "+00:00" in context["timestamp"]  # ISO-8601 UTC

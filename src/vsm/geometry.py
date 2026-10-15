@@ -90,7 +90,9 @@ def project_points_to_image(
     return uv, depth, valid
 
 
-def clamp_bbox(bbox: tuple[float, float, float, float], image_shape: tuple[int, int]) -> tuple[int, int, int, int]:
+def clamp_bbox(
+    bbox: tuple[float, float, float, float], image_shape: tuple[int, int]
+) -> tuple[int, int, int, int]:
     """Clamp a float ``(x0, y0, x1, y1)`` box to integer image bounds."""
     height, width = int(image_shape[0]), int(image_shape[1])
     x0, y0, x1, y1 = (float(v) for v in bbox)

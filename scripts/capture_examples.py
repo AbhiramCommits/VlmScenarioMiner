@@ -18,13 +18,22 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 
 EXAMPLES: list[tuple[str, list[str]]] = [
     ("Per-class manifest counts", ["--counts"]),
-    ("Construction-zone frames above 0.6 confidence", ["--tag", "construction_zone", "--min-conf", "0.6", "--limit", "8"]),
-    ("Occluded pedestrians above 0.8 confidence", ["--tag", "occluded_pedestrian", "--min-conf", "0.8", "--limit", "5"]),
+    (
+        "Construction-zone frames above 0.6 confidence",
+        ["--tag", "construction_zone", "--min-conf", "0.6", "--limit", "8"],
+    ),
+    (
+        "Occluded pedestrians above 0.8 confidence",
+        ["--tag", "occluded_pedestrian", "--min-conf", "0.8", "--limit", "5"],
+    ),
     ("Manifest vs ground truth", ["--agreement"]),
     ("Frames carrying the most tags", ["--frames", "--limit", "5"]),
     (
         "Raw SQL: detections per location and class",
-        ["--sql", "SELECT location, class_name, COUNT(*) AS detections FROM scenarios GROUP BY 1, 2 ORDER BY 1, 2"],
+        [
+            "--sql",
+            "SELECT location, class_name, COUNT(*) AS detections FROM scenarios GROUP BY 1, 2 ORDER BY 1, 2",
+        ],
     ),
     (
         "Raw SQL: highest-confidence detection per class",
@@ -52,8 +61,12 @@ def run_query(argv: list[str]) -> str:
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("--out", type=Path, default=REPO_ROOT / "out" / "store" / "example_queries.md")
+    parser = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    parser.add_argument(
+        "--out", type=Path, default=REPO_ROOT / "out" / "store" / "example_queries.md"
+    )
     parser.add_argument("--python", default=sys.executable)
     args = parser.parse_args(argv)
 

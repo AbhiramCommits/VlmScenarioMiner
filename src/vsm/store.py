@@ -171,7 +171,9 @@ def open_db(
     if not gt_path.is_absolute():
         gt_path = settings.data_dir.parent / gt_path
     if not store_dir.exists():
-        raise FileNotFoundError(f"no scenario manifest at {store_dir}; run scripts/export_store.py first")
+        raise FileNotFoundError(
+            f"no scenario manifest at {store_dir}; run scripts/export_store.py first"
+        )
 
     connection = duckdb.connect()
     connection.execute(
@@ -195,9 +197,7 @@ def open_db(
     return connection
 
 
-def query_by_tag(
-    conn, class_name: str, min_conf: float = 0.0, limit: int = 50
-) -> pd.DataFrame:
+def query_by_tag(conn, class_name: str, min_conf: float = 0.0, limit: int = 50) -> pd.DataFrame:
     """All detections for one scenario tag above a confidence floor."""
     return conn.execute(
         """

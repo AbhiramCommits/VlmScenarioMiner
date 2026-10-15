@@ -160,7 +160,13 @@ def test_confusion_row_sums_equal_support() -> None:
     assert matrix.shape == (5, 5)
 
     # Row sums must equal the number of GT frames whose primary label is that row.
-    gt_primary = {"road_change": 1, "construction_zone": 1, NONE: 1, "emergency_vehicle": 1, "occluded_pedestrian": 1}
+    gt_primary = {
+        "road_change": 1,
+        "construction_zone": 1,
+        NONE: 1,
+        "emergency_vehicle": 1,
+        "occluded_pedestrian": 1,
+    }
     for i, label in enumerate(labels):
         assert matrix[i].sum() == gt_primary[label], label
     assert matrix.sum() == len(predictions)
@@ -262,7 +268,9 @@ def test_bootstrap_improvement_is_significant() -> None:
 
 
 def test_bootstrap_no_shared_frames_reports_error() -> None:
-    result = bootstrap_macro_f1_ci([rec("a", ("road_change", 0.9))], [rec("b", ("road_change", 0.9))], {"a": ["road_change"]})
+    result = bootstrap_macro_f1_ci(
+        [rec("a", ("road_change", 0.9))], [rec("b", ("road_change", 0.9))], {"a": ["road_change"]}
+    )
     assert "error" in result
     assert result["n_frames"] == 0
 

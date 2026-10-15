@@ -1,0 +1,22 @@
+.git
+.github
+.env
+.venv
+venv
+
+# Regenerated inside the image by `make data`
+data/synthetic
+data/nuscenes
+
+# Derived outputs are rebuilt by `make repro`
+out/
+
+# Local caches
+.pytest_cache
+.ruff_cache
+__pycache__
+*.pyc
+.coverage
+coverage.xml
+htmlcov
+.DS_Store

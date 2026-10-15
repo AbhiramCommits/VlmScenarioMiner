@@ -74,7 +74,9 @@ def load_prompt(version: str, prompt_dir: Path | None = None) -> Prompt:
     directory = Path(prompt_dir) if prompt_dir is not None else PROMPT_DIR
     path = directory / f"{version}.yaml"
     if not path.exists():
-        raise PromptError(f"unknown prompt version {version!r}; available: {list_versions(directory)}")
+        raise PromptError(
+            f"unknown prompt version {version!r}; available: {list_versions(directory)}"
+        )
 
     raw = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
     if not isinstance(raw, dict):

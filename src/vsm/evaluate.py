@@ -139,9 +139,21 @@ def per_class_metrics(counts: ClassCounts) -> dict[str, dict[str, float]]:
 def macro_micro(counts: ClassCounts) -> dict[str, float]:
     """Macro (unweighted mean over hazard classes) and micro (pooled) aggregates."""
     per_class = per_class_metrics(counts)
-    macro_p = float(np.mean([per_class[name]["precision"] for name in counts.classes])) if counts.classes else 0.0
-    macro_r = float(np.mean([per_class[name]["recall"] for name in counts.classes])) if counts.classes else 0.0
-    macro_f1 = float(np.mean([per_class[name]["f1"] for name in counts.classes])) if counts.classes else 0.0
+    macro_p = (
+        float(np.mean([per_class[name]["precision"] for name in counts.classes]))
+        if counts.classes
+        else 0.0
+    )
+    macro_r = (
+        float(np.mean([per_class[name]["recall"] for name in counts.classes]))
+        if counts.classes
+        else 0.0
+    )
+    macro_f1 = (
+        float(np.mean([per_class[name]["f1"] for name in counts.classes]))
+        if counts.classes
+        else 0.0
+    )
 
     tp = sum(counts.tp.values())
     fp = sum(counts.fp.values())
@@ -164,7 +176,9 @@ def macro_micro(counts: ClassCounts) -> dict[str, float]:
 
 
 def nominal_metrics(
-    predictions: Sequence[dict[str, Any]], ground_truth: dict[str, list[str]], threshold: float = 0.5
+    predictions: Sequence[dict[str, Any]],
+    ground_truth: dict[str, list[str]],
+    threshold: float = 0.5,
 ) -> dict[str, float]:
     """How well the model separates "nothing happening" from "something happening"."""
     tp = fp = fn = tn = 0
@@ -187,7 +201,9 @@ def nominal_metrics(
     return {
         "precision": round(precision, 6),
         "recall": round(recall, 6),
-        "f1": round(2 * precision * recall / (precision + recall), 6) if precision + recall else 0.0,
+        "f1": round(2 * precision * recall / (precision + recall), 6)
+        if precision + recall
+        else 0.0,
         "support": tp + fn,
         "accuracy": round((tp + tn) / (tp + tn + fp + fn), 6) if tp + tn + fp + fn else 0.0,
         "tp": tp,
@@ -281,7 +297,9 @@ def threshold_sweep(
 
 
 def macro_f1_at(
-    predictions: Sequence[dict[str, Any]], ground_truth: dict[str, list[str]], threshold: float = 0.5
+    predictions: Sequence[dict[str, Any]],
+    ground_truth: dict[str, list[str]],
+    threshold: float = 0.5,
 ) -> float:
     counts = count_matches(predictions, ground_truth, threshold=threshold)
     return macro_micro(counts)["macro_f1"]
@@ -371,7 +389,5 @@ def evaluate_run(
         "confusion_matrix": matrix.tolist(),
         "confusion_labels": matrix_labels,
         "top_confusions": top_confusions(matrix, matrix_labels, k=6),
-        "threshold_sweep": threshold_sweep(
-            aligned_preds, aligned_gt, thresholds=sweep_thresholds
-        ),
+        "threshold_sweep": threshold_sweep(aligned_preds, aligned_gt, thresholds=sweep_thresholds),
     }

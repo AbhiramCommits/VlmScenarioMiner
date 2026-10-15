@@ -26,6 +26,10 @@ class CacheEntry:
     model: str
     backend: str
     prompt_version: str
+    # Reliability metadata travels with the cached answer, so schema-failure rates do
+    # not silently drop to zero just because a rerun hit the cache.
+    first_attempt_valid: bool = True
+    schema_retries: int = 0
 
     def to_dict(self) -> dict[str, object]:
         return {
@@ -36,6 +40,8 @@ class CacheEntry:
             "model": self.model,
             "backend": self.backend,
             "prompt_version": self.prompt_version,
+            "first_attempt_valid": self.first_attempt_valid,
+            "schema_retries": self.schema_retries,
         }
 
     @classmethod
@@ -48,6 +54,8 @@ class CacheEntry:
             model=str(payload.get("model", "")),
             backend=str(payload.get("backend", "")),
             prompt_version=str(payload.get("prompt_version", "")),
+            first_attempt_valid=bool(payload.get("first_attempt_valid", True)),
+            schema_retries=int(payload.get("schema_retries", 0)),  # type: ignore[arg-type]
         )
 
 

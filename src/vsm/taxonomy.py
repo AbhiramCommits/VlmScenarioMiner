@@ -122,7 +122,9 @@ def validate_response(raw_text: str) -> ScenarioDetection:
     try:
         data: Any = json.loads(payload)
     except json.JSONDecodeError as exc:
-        raise SchemaViolation(f"response is not valid JSON: {exc}", raw_text, reason="not_json") from exc
+        raise SchemaViolation(
+            f"response is not valid JSON: {exc}", raw_text, reason="not_json"
+        ) from exc
 
     if not isinstance(data, dict):
         raise SchemaViolation("response JSON must be an object", raw_text, reason="not_object")

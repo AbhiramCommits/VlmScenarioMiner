@@ -34,7 +34,12 @@ def pred(frame_id: str, *labels: tuple[str, float]) -> dict:
         "model": "gpt-4o-mini",
         "backend": "mock",
         "labels": [
-            {"class_name": c, "confidence": conf, "evidence": f"evidence for {c}", "bbox_hint": None}
+            {
+                "class_name": c,
+                "confidence": conf,
+                "evidence": f"evidence for {c}",
+                "bbox_hint": None,
+            }
             for c, conf in labels
         ],
     }
@@ -66,7 +71,9 @@ def tmp_store(tmp_path: Path) -> tuple[Path, Path, list[dict]]:
 
 
 def test_flatten_detections_drops_low_confidence() -> None:
-    frame = flatten_detections([pred("f01", ("construction_zone", 0.9), ("road_change", 0.2))], threshold=0.5)
+    frame = flatten_detections(
+        [pred("f01", ("construction_zone", 0.9), ("road_change", 0.2))], threshold=0.5
+    )
     assert list(frame.columns) == list(MANIFEST_COLUMNS)
     assert len(frame) == 1
     assert frame.iloc[0]["class_name"] == "construction_zone"
@@ -74,7 +81,9 @@ def test_flatten_detections_drops_low_confidence() -> None:
 
 def test_write_and_read_round_trip(tmp_store) -> None:
     store_dir, gt_path, predictions = tmp_store
-    summary = write_manifest(predictions, {"prompt_version": "v3", "model": "m", "confidence_threshold": 0.5}, store_dir)
+    summary = write_manifest(
+        predictions, {"prompt_version": "v3", "model": "m", "confidence_threshold": 0.5}, store_dir
+    )
     assert summary.n_rows == 4  # f01, f03, f04 x2
     assert summary.n_frames == 3
     assert summary.per_class == {"construction_zone": 2, "emergency_vehicle": 1, "road_change": 1}
@@ -97,7 +106,13 @@ def test_counts_match_jsonl(tmp_store) -> None:
                 expected[label["class_name"]] = expected.get(label["class_name"], 0) + 1
     conn = open_db(store_dir, gt_path)
     actual = dict(
-        zip(*[list(col) for col in scenario_counts(conn)[["class_name", "detections"]].to_numpy().T], strict=True)
+        zip(
+            *[
+                list(col)
+                for col in scenario_counts(conn)[["class_name", "detections"]].to_numpy().T
+            ],
+            strict=True,
+        )
     )
     assert {k: int(v) for k, v in actual.items()} == expected
 
@@ -196,7 +211,9 @@ def test_gt_view_is_queryable(tmp_store) -> None:
 def test_write_manifest_errors_when_nothing_accepted(tmp_store) -> None:
     store_dir, _, _ = tmp_store
     with pytest.raises(ValueError, match="no accepted detections"):
-        write_manifest([pred("f01", ("construction_zone", 0.2))], {"confidence_threshold": 0.5}, store_dir)
+        write_manifest(
+            [pred("f01", ("construction_zone", 0.2))], {"confidence_threshold": 0.5}, store_dir
+        )
 
 
 def test_manifest_meta_is_valid_json(tmp_store) -> None:

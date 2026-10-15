@@ -11,7 +11,7 @@
   "prompt_version": "v3",
   "model": "gpt-4o-mini",
   "threshold": 0.5,
-  "ingested_at": "2026-10-15T07:47:13.613039+00:00",
+  "ingested_at": "2026-10-15T08:01:00.005541+00:00",
   "partitions": [
     "class_name=construction_zone",
     "class_name=emergency_vehicle",

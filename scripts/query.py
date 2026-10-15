@@ -37,11 +37,15 @@ pd.set_option("display.width", 220)
 
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
     group = parser.add_mutually_exclusive_group()
     group.add_argument("--tag", choices=list(HAZARD_CLASSES), help="scenario tag to filter on")
     group.add_argument("--counts", action="store_true", help="per-class manifest counts")
-    group.add_argument("--agreement", action="store_true", help="manifest vs ground-truth agreement")
+    group.add_argument(
+        "--agreement", action="store_true", help="manifest vs ground-truth agreement"
+    )
     group.add_argument("--frames", action="store_true", help="frames with the most tags")
     group.add_argument("--sql", help="raw SQL against the scenarios / gt views")
     parser.add_argument("--min-conf", type=float, default=0.0)
@@ -74,13 +78,23 @@ def main(argv: list[str] | None = None) -> int:
         print(f"tag={args.tag} min_conf={args.min_conf} limit={args.limit}\n")
         frame = query_by_tag(connection, args.tag, min_conf=args.min_conf, limit=args.limit)
         display = frame[
-            ["frame_id", "scene_id", "class_name", "confidence", "ego_speed_mps", "location", "evidence"]
+            [
+                "frame_id",
+                "scene_id",
+                "class_name",
+                "confidence",
+                "ego_speed_mps",
+                "location",
+                "evidence",
+            ]
         ].copy()
         display["evidence"] = display["evidence"].str.slice(0, 44)
         print(display.to_string(index=False))
         print(f"\nrows returned: {len(frame)}")
     else:
-        print("nothing to do; pass --counts, --tag, --agreement, --frames or --sql", file=sys.stderr)
+        print(
+            "nothing to do; pass --counts, --tag, --agreement, --frames or --sql", file=sys.stderr
+        )
         return 2
     return 0
 
