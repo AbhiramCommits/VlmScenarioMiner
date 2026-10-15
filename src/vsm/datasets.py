@@ -16,6 +16,8 @@ from pathlib import Path
 import cv2
 import numpy as np
 
+from vsm.config import REPO_ROOT
+
 IMAGE_WIDTH = 640
 IMAGE_HEIGHT = 360
 
@@ -72,19 +74,25 @@ class Frame:
 # --------------------------------------------------------------------------------------
 
 
-def _draw_road_base(img: np.ndarray) -> None:
-    """Sky, asphalt, and converging lane markings."""
-    img[:HORIZON_Y] = COLOR_SKY
-    img[HORIZON_Y:] = COLOR_ROAD
-    # Distant treeline / skyline band for a little texture.
-    cv2.rectangle(img, (0, HORIZON_Y - 14), (IMAGE_WIDTH, HORIZON_Y), (120, 130, 120), -1)
+def _draw_road_base(img: np.ndarray, rng: np.random.Generator) -> None:
+    """Sky, asphalt, and converging lane markings with per-frame geometry jitter."""
+    horizon = int(HORIZON_Y + rng.integers(-18, 19))
+    vanish_x = int(IMAGE_WIDTH // 2 + rng.integers(-70, 71))
+    sky = tuple(int(np.clip(c + rng.integers(-14, 15), 0, 255)) for c in COLOR_SKY)
+    road = tuple(int(np.clip(c + rng.integers(-12, 13), 0, 255)) for c in COLOR_ROAD)
+    treeline = tuple(int(np.clip(c + rng.integers(-20, 21), 0, 255)) for c in (120, 130, 120))
 
-    # Road trapezoid from the vanishing point out to the bottom corners.
-    vanish = (IMAGE_WIDTH // 2, HORIZON_Y)
+    img[:horizon] = sky
+    img[horizon:] = road
+    cv2.rectangle(img, (0, max(0, horizon - 14)), (IMAGE_WIDTH, horizon), treeline, -1)
+
+    half_top = int(rng.integers(28, 52))
+    inset_top = int(rng.integers(18, 40))
+    inset_bottom = int(rng.integers(14, 46))
     poly = np.array(
         [
-            [vanish[0] - 40, HORIZON_Y],
-            [vanish[0] + 40, HORIZON_Y],
+            [vanish_x - half_top, horizon],
+            [vanish_x + half_top, horizon],
             [IMAGE_WIDTH - 10, IMAGE_HEIGHT],
             [10, IMAGE_HEIGHT],
         ],
@@ -92,18 +100,21 @@ def _draw_road_base(img: np.ndarray) -> None:
     )
     cv2.fillPoly(img, [poly], COLOR_ROAD_EDGE)
     inner = poly.copy()
-    inner[:, 0] += np.array([26, -26, -30, 30])
-    cv2.fillPoly(img, [inner], COLOR_ROAD)
+    inner[:, 0] += np.array([inset_top, -inset_top, -inset_bottom, inset_bottom])
+    cv2.fillPoly(img, [inner], road)
 
-    # Lane edges.
-    cv2.line(img, tuple(inner[0]), tuple(inner[3]), COLOR_WHITE, 3)
-    cv2.line(img, tuple(inner[1]), tuple(inner[2]), COLOR_WHITE, 3)
+    # Lane edges, jittered so consecutive frames are not pixel-identical.
+    cv2.line(img, tuple(inner[0]), tuple(inner[3]), COLOR_WHITE, int(rng.integers(2, 5)))
+    cv2.line(img, tuple(inner[1]), tuple(inner[2]), COLOR_WHITE, int(rng.integers(2, 5)))
     # Dashed centre lane.
-    for k in range(6):
-        t0, t1 = k / 6.0, k / 6.0 + 0.07
-        y0 = int(HORIZON_Y + t0 * (IMAGE_HEIGHT - HORIZON_Y))
-        y1 = int(HORIZON_Y + t1 * (IMAGE_HEIGHT - HORIZON_Y))
-        cv2.line(img, (vanish[0], y0), (vanish[0], y1), COLOR_LANE, 2)
+    dashes = int(rng.integers(4, 8))
+    for k in range(dashes):
+        t0 = k / dashes
+        t1 = t0 + 0.05 + float(rng.random()) * 0.05
+        y0 = int(horizon + t0 * (IMAGE_HEIGHT - horizon))
+        y1 = int(horizon + t1 * (IMAGE_HEIGHT - horizon))
+        centre_x = int(inner[0, 0] + (inner[3, 0] - inner[0, 0]) * t0)
+        cv2.line(img, (centre_x, y0), (centre_x, y1), COLOR_LANE, 2)
 
 
 def _draw_cone(img: np.ndarray, base_x: int, base_y: int, scale: float) -> None:
@@ -190,8 +201,15 @@ def _motif_road_change(img: np.ndarray, rng: np.random.Generator) -> None:
 
 
 def _motif_nominal(img: np.ndarray, rng: np.random.Generator) -> None:
-    # Plain road: nothing but the base lane markings.
-    del img, rng
+    # Plain road. A couple of distant traffic blobs keep frames visually distinct
+    # without introducing any hazard cue.
+    for _ in range(int(rng.integers(0, 3))):
+        w = int(rng.integers(16, 34))
+        h = int(rng.integers(10, 20))
+        x = int(rng.integers(120, IMAGE_WIDTH - 120))
+        y = HORIZON_Y + int(rng.integers(-6, 24))
+        shade = int(rng.integers(70, 150))
+        cv2.rectangle(img, (x, y), (x + w, y + h), (shade, shade, shade), -1)
 
 
 _MOTIFS = {
@@ -208,7 +226,7 @@ def render_frame(true_class: str, rng: np.random.Generator) -> np.ndarray:
     if true_class not in _MOTIFS:
         raise ValueError(f"unknown synthetic class: {true_class!r}")
     img = np.zeros((IMAGE_HEIGHT, IMAGE_WIDTH, 3), dtype=np.uint8)
-    _draw_road_base(img)
+    _draw_road_base(img, rng)
     _MOTIFS[true_class](img, rng)
     # Per-frame exposure jitter so frames are not byte-identical.
     gain = 1.0 + float(rng.normal(0.0, 0.02))
@@ -226,6 +244,55 @@ def _jitter(img: np.ndarray, rng: np.random.Generator) -> np.ndarray:
     return np.clip(shifted.astype(np.float32) * gain, 0, 255).astype(np.uint8)
 
 
+def _frame_from_record(record: dict[str, object]) -> Frame:
+    raw_path = Path(str(record["image_path"]))
+    path = raw_path if raw_path.is_absolute() else (REPO_ROOT / raw_path)
+    return Frame(
+        frame_id=str(record["frame_id"]),
+        camera=str(record.get("camera", "CAM_FRONT")),
+        image_path=path,
+        timestamp=float(record["timestamp"]),  # type: ignore[arg-type]
+        scene_id=str(record["scene_id"]),
+        ego_speed_mps=float(record["ego_speed_mps"]),  # type: ignore[arg-type]
+        location=str(record["location"]),
+        true_class=str(record["true_class"]),
+        width=int(record.get("width", IMAGE_WIDTH)),  # type: ignore[arg-type]
+        height=int(record.get("height", IMAGE_HEIGHT)),  # type: ignore[arg-type]
+        metadata=dict(record.get("metadata", {})),  # type: ignore[arg-type]
+    )
+
+
+def _load_existing_synthetic(out_dir: Path, n: int, seed: int) -> list[Frame] | None:
+    """Fast path: reuse an already-generated frame set when it matches (n, seed).
+
+    Regenerating would rewrite every PNG and change its mtime, which would throw away
+    the embedding cache and make reruns slow. So we only regenerate on a mismatch.
+    """
+    hidden_path = out_dir / "ground_truth_hidden.json"
+    if not hidden_path.exists():
+        return None
+    try:
+        payload = json.loads(hidden_path.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError):
+        return None
+    meta = payload.get("__meta__", {})
+    records = payload.get("frames", {})
+    if meta.get("seed") != seed or meta.get("n") != n or len(records) != n:
+        return None
+    frames: list[Frame] = []
+    try:
+        for record in records.values():
+            frame = _frame_from_record(record)
+            if not frame.image_path.exists():
+                return None
+            frames.append(frame)
+    except (KeyError, TypeError, ValueError):
+        # Older or partially written metadata: fall back to a full regeneration.
+        return None
+    frames.sort(key=lambda f: int(f.metadata.get("index", 0)))
+    return frames
+
+
 def load_synthetic(n: int = 120, seed: int = 0, out_dir: Path | None = None) -> list[Frame]:
     """Generate ``n`` deterministic synthetic frames and write them to disk.
 
@@ -233,13 +300,18 @@ def load_synthetic(n: int = 120, seed: int = 0, out_dir: Path | None = None) -> 
     balanced as ``n`` allows. Roughly 15% of frames (after the first) are rendered
     as near-duplicates of their predecessor, mirroring redundant 2Hz camera frames
     and giving the dedup stage something real to do.
+
+    Idempotent: a second call with the same ``(n, seed)`` reuses what is on disk.
     """
     if n <= 0:
         raise ValueError("n must be positive")
-    rng = np.random.default_rng(seed)
     out_dir = Path(out_dir) if out_dir is not None else Path("data") / "synthetic"
+    existing = _load_existing_synthetic(out_dir, n, seed)
+    if existing is not None:
+        return existing
     out_dir.mkdir(parents=True, exist_ok=True)
 
+    rng = np.random.default_rng(seed)
     frames: list[Frame] = []
     hidden: dict[str, dict[str, object]] = {}
     prev_img: np.ndarray | None = None
@@ -282,10 +354,18 @@ def load_synthetic(n: int = 120, seed: int = 0, out_dir: Path | None = None) -> 
         )
         frames.append(frame)
         hidden[frame_id] = {
+            "frame_id": frame_id,
             "true_class": true_class,
             "scene_id": scene_id,
+            "camera": frame.camera,
+            "timestamp": frame.timestamp,
+            "ego_speed_mps": frame.ego_speed_mps,
+            "location": frame.location,
+            "width": frame.width,
+            "height": frame.height,
             "image_path": str(image_path),
             "is_near_duplicate": is_dup,
+            "metadata": dict(frame.metadata),
         }
 
     hidden_path = out_dir / "ground_truth_hidden.json"

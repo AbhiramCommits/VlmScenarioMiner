@@ -51,7 +51,7 @@ class Settings:
     workers: int = 8
     temperature: float = 0.0
     max_retries: int = 3
-    dedup_threshold: float = 0.98
+    dedup_threshold: float = 0.99
     conf_threshold: float = 0.5
     seed: int = 0
 
@@ -101,7 +101,7 @@ def load_settings() -> Settings:
         workers=_env_int("VLM_CONCURRENCY", 8),
         temperature=_env_float("VLM_TEMPERATURE", 0.0),
         max_retries=_env_int("VLM_MAX_RETRIES", 3),
-        dedup_threshold=_env_float("DEDUP_THRESHOLD", 0.98),
+        dedup_threshold=_env_float("DEDUP_THRESHOLD", 0.99),
         conf_threshold=_env_float("CONF_THRESHOLD", 0.5),
         seed=_env_int("VSM_SEED", 0),
         cache_dir=_env_path("CACHE_DIR", "out/cache"),
