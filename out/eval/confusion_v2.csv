@@ -1,0 +1,6 @@
+gt\pred,construction_zone,emergency_vehicle,occluded_pedestrian,road_change,none
+construction_zone,17,0,0,0,4
+emergency_vehicle,0,18,1,0,5
+occluded_pedestrian,0,0,14,1,3
+road_change,0,0,0,17,3
+none,0,0,0,1,17
