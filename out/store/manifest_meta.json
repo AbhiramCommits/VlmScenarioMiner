@@ -1,0 +1,36 @@
+{
+  "path": "/Users/abhiramkasireddi/VlmScenarioMiner/out/store/scenarios",
+  "n_rows": 78,
+  "n_frames": 77,
+  "per_class": {
+    "construction_zone": 22,
+    "emergency_vehicle": 21,
+    "occluded_pedestrian": 20,
+    "road_change": 15
+  },
+  "prompt_version": "v3",
+  "model": "gpt-4o-mini",
+  "threshold": 0.5,
+  "ingested_at": "2026-10-15T07:47:13.613039+00:00",
+  "partitions": [
+    "class_name=construction_zone",
+    "class_name=emergency_vehicle",
+    "class_name=occluded_pedestrian",
+    "class_name=road_change"
+  ],
+  "columns": [
+    "frame_id",
+    "scene_id",
+    "camera",
+    "timestamp",
+    "class_name",
+    "confidence",
+    "evidence",
+    "prompt_version",
+    "model",
+    "image_path",
+    "ego_speed_mps",
+    "location",
+    "ingested_at"
+  ]
+}

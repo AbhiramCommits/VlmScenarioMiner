@@ -25,7 +25,6 @@ data/.cache/
 .cache/
 out/cache/
 out/cache*/
-out/store/
 out/tmp/
 
 # OS
